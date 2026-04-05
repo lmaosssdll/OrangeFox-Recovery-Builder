@@ -106,6 +106,17 @@ jobs:
         cd ${{ github.event.inputs.DEVICE_PATH }}
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
+    # --- ИСПРАВЛЕНИЕ ДЛЯ UNISOC DRM ---
+    - name: Patch DRM for Unisoc
+      run: |
+        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+        echo "Replacing graphics_drm.cpp to fix Atomic commit failed ret=-22..."
+        # Удаляем старый глючный файл
+        rm -f bootable/recovery/minuitwrp/graphics_drm.cpp
+        # Копируем исправленный файл из твоего дерева
+        cp ${{ github.event.inputs.DEVICE_PATH }}/patches/graphics_drm.cpp bootable/recovery/minuitwrp/graphics_drm.cpp
+        echo "DRM Patch applied successfully!"
+
     - name: Check Manifest Branch
       uses: haya14busa/action-cond@v1
       id: fox_branch
