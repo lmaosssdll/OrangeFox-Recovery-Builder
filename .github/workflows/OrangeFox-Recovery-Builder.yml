@@ -97,9 +97,11 @@ jobs:
         git clone https://gitlab.com/OrangeFox/sync.git
         cd sync
         
-        # Если выбрана ветка 11.0, используем legacy-скрипт, иначе - обычный
+        # Если выбрана ветка 11.0, заходим в папку legacy и запускаем скрипт оттуда
         if [ "${{ github.event.inputs.MANIFEST_BRANCH }}" = "11.0" ]; then
-          bash legacy/orangefox_sync_legacy.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          cd legacy
+          bash orangefox_sync_legacy.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          cd ..
         else
           ./orangefox_sync.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
         fi
